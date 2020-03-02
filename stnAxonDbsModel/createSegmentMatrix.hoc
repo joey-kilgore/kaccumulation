@@ -1,0 +1,81 @@
+objref secMat
+
+NpN = 1 * spatial_factor			//Nodal segments per node of Ranvier
+MASpN = 2 * spatial_factor			//MAS segments per node of Ranvier
+PSpN = 2 * spatial_factor			//PS segments per node of Ranvier
+ISpN = 6 * spatial_factor			//IS segments per node of Ranvier
+SpN = 11 * spatial_factor			//total segments per node of Ranvier
+	
+//create a data table with rows describing each section in order from x = 0 to x = total length
+
+secMat = new Matrix(totalSections,3)		//Columns: segment type, # of segment within type, length of segment
+
+for i=0, nodeSections/spatial_factor -1 {
+			
+		//set IS positions
+		for j=0, ISpN/2-1 {
+
+			secMat.x[i*SpN + j][0] = 1
+			secMat.x[i*SpN + j + ISpN/2 + PSpN + MASpN + NpN][0] = 1
+			
+			secMat.x[i*SpN + j][1] = i*ISpN + j
+			secMat.x[i*SpN + j + ISpN/2 + PSpN + MASpN + NpN][1] = i*ISpN + ISpN/2 + j
+			
+			secMat.x[i*SpN + j][2] = isLength
+			secMat.x[i*SpN + j + ISpN/2 + PSpN + MASpN + NpN][2] = isLength
+			
+			}
+
+		//set PS positions
+		for j=0, PSpN/2-1 {
+
+			secMat.x[i*SpN + ISpN/2 + j][0] = 2
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN + NpN + j][0] = 2
+			
+			secMat.x[i*SpN + ISpN/2 + j][1] = i*PSpN + j
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN + NpN + j][1] = i*PSpN + PSpN/2 + j
+			
+			secMat.x[i*SpN + ISpN/2 + j][2] = psLength
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN + NpN + j][2] = psLength
+			
+			}
+
+		//set MAS positions
+		for j=0, MASpN/2-1 {
+
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + j][0] = 3
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2 + NpN + j][0] = 3
+			
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + j][1] = i*MASpN + j
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2 + NpN + j][1] = i*MASpN + MASpN/2 + j
+			
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + j][2] = masLength
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2 + NpN + j][2] = masLength
+
+			}
+		
+		//set node positions
+
+		if (NpN == 1){
+		
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2][0] = 4
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2][1] = i
+			secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2][2] = nodeLength
+						
+		} else{
+
+			for j=0, NpN/2-1 {
+
+				secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2 + j][0] = 4
+				secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2 + NpN/2 + j][0] = 4
+
+				secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2 + j][1] = i*NpN + j
+				secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2 + NpN/2 + j][1] = i*NpN + NpN/2 + j
+
+				secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2 + j][2] = nodeLength
+				secMat.x[i*SpN + ISpN/2 + PSpN/2 + MASpN/2 + NpN/2 + j][2] = nodeLength
+
+				}
+			
+			}
+	}

@@ -1,0 +1,109 @@
+create node[nodeSections], MAS[masSections], PS[psSections], IS[iSections]
+
+proc createaxon() {
+	for i=0,nodeSections-1 {
+		node[i]{					
+			nseg=1
+			diam=nodeDiameter
+			L=nodeLength
+			Ra=rhoa		
+			cm=2
+			insert axnodenew2
+			insert NaKpump
+			INaKmax_NaKpump = defINaKmax
+			Kmnai_NaKpump = defKmnai
+			Kmko_NaKpump = defKmko
+			insert kdifrl
+			rn_kdifrl=nodeDiameter/2
+			nodalGap_kdifrl=nodalGap
+			kbath_kdifrl = ko0_k_ion
+			insert extracellular xraxial=Rpn0 xg=1e10 xc=0
+			}
+		}
+
+	for i=0, masSections-1 {
+		MAS[i]{
+			nseg=1
+			diam=fiberDiameter
+			L=masLength
+			Ra=rhoa*(1/(masDiameter/fiberDiameter)^2)
+			cm=2
+			insert pas
+			g_pas=0.0001	
+			e_pas=v_init
+			insert kdifl
+			rseg_kdifl=masDiameter/2
+			sp_kdifl=space_p1
+			insert NaKpump
+			INaKmax_NaKpump = defINaKmax
+			Kmnai_NaKpump = defKmnai
+			Kmko_NaKpump = defKmko
+			insert extracellular xraxial=Rpn1 xg=mygm/(numberOfLamella*2) xc=mycm/(numberOfLamella*2)
+			}
+		}
+
+	for i=0, psSections-1 {
+		PS[i]{
+			nseg=1
+			diam=fiberDiameter
+			L=psLength
+			Ra=rhoa*(1/(psDiameter/fiberDiameter)^2)
+			cm=2
+			insert fastK
+			gflut_fastK=0.0001
+			gkfbar_fastK=defgkfbar
+			insert kdifl
+			rseg_kdifl=psDiameter/2
+			sp_kdifl=space_p2
+			insert NaKpump
+			INaKmax_NaKpump = defINaKmax
+			Kmnai_NaKpump = defKmnai
+			Kmko_NaKpump = defKmko
+			insert extracellular xraxial=Rpn2 xg=mygm/(numberOfLamella*2) xc=mycm/(numberOfLamella*2)
+			}
+	}
+
+	for i=0, iSections-1 {
+		IS[i]{
+			nseg=1
+			diam=fiberDiameter
+			L=isLength
+			Ra=rhoa*(1/(axonDiameter/fiberDiameter)^2)
+			cm=2
+			insert pas
+			g_pas=0.0001
+			e_pas=v_init
+			insert kdifl
+			rseg_kdifl=axonDiameter/2
+			sp_kdifl=space_i
+			insert NaKpump
+			INaKmax_NaKpump = defINaKmax
+			Kmnai_NaKpump = defKmnai
+			Kmko_NaKpump = defKmko
+			insert extracellular xraxial=Rpx xg=mygm/(numberOfLamella*2) xc=mycm/(numberOfLamella*2)
+			}
+	}
+
+	//Connect the axon together. This is repetitive, but necessary
+	for i=0, totalSections-2 {
+
+		if (secMat.x[i][0] == 1 && secMat.x[i+1][0] == 1) { connect IS[ secMat.x[i][1] ](1), IS[ secMat.x[i+1][1] ](0)  }
+		if (secMat.x[i][0] == 1 && secMat.x[i+1][0] == 2) {	connect IS[ secMat.x[i][1] ](1), PS[ secMat.x[i+1][1] ](0)	}
+
+		if (secMat.x[i][0] == 2 && secMat.x[i+1][0] == 1) { connect PS[ secMat.x[i][1] ](1), IS[ secMat.x[i+1][1] ](0)	}
+		if (secMat.x[i][0] == 2 && secMat.x[i+1][0] == 2) {	connect PS[ secMat.x[i][1] ](1), PS[ secMat.x[i+1][1] ](0)	}
+		if (secMat.x[i][0] == 2 && secMat.x[i+1][0] == 3) {	connect PS[ secMat.x[i][1] ](1), MAS[ secMat.x[i+1][1] ](0)	}
+
+		if (secMat.x[i][0] == 3 && secMat.x[i+1][0] == 2) {	connect MAS[ secMat.x[i][1] ](1), PS[ secMat.x[i+1][1] ](0)	}
+		if (secMat.x[i][0] == 3 && secMat.x[i+1][0] == 3) { connect MAS[ secMat.x[i][1] ](1), MAS[ secMat.x[i+1][1] ](0)	}
+		if (secMat.x[i][0] == 3 && secMat.x[i+1][0] == 4) { connect MAS[ secMat.x[i][1] ](1), node[ secMat.x[i+1][1] ](0)	}		
+
+		if (secMat.x[i][0] == 4 && secMat.x[i+1][0] == 3) { connect node[ secMat.x[i][1] ](1), MAS[ secMat.x[i+1][1] ](0)	}
+		if (secMat.x[i][0] == 4 && secMat.x[i+1][0] == 4) { connect node[ secMat.x[i][1] ](1), node[ secMat.x[i+1][1] ](0)	}		
+
+	}
+
+	finitialize(v_init)
+	fcurrent()
+
+  }

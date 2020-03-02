@@ -1,0 +1,84 @@
+proc modelInputDefaults() {
+	deffiberDiameter = 2	//fiber diameter
+	defxElec = 0		//electrode position (um)
+	defyElec = 10	
+	defzElec = 0
+	defrho = 350			//resistivity (ohm cm)
+	} 
+
+proc globalParameters() {
+	v_init=-70
+	ki0_k_ion=106
+	ko0_k_ion=3
+	celsius=36
+	
+//resolution
+	temporal_factor = 1    			//1: dt = 0.0125, 2: dt = 0.00625
+	spatial_factor = 1				//Multiplier for the number of sections used in the model. 1: 231 sections total
+	spatial_factor_sections = 23	//should be an odd number so that v.(0.5) is always computed. nseg for segments is modified in buildall()
+
+//topological
+	nodeSections = 21 * spatial_factor	// nodes of Ranvier
+	masSections = 42 * spatial_factor	// MAS
+	psSections = 42 * spatial_factor	// PS
+	iSections = 126 * spatial_factor	// IS
+	totalSections = 231 * spatial_factor
+	
+
+//morphological
+	masLength=3
+	nodeLength=1
+	nodalGap=1.9
+	space_p1=0.0025
+	space_p2=0.008
+	
+	space_i=space_p2
+	space_n=0.002
+	defspace_1=space_p1
+	defspace_2=space_p2
+
+//electrical  	
+	rhoa=70
+	mycm=0.1
+	mygm=0.001
+	defgkfbar = 0.03
+
+	defINaKmax = 0.00246
+	
+	defKmnai = 27.9
+	defKmko = 5.3
+	}
+
+proc dependent_var() {
+
+	fiberDiameter = deffiberDiameter
+
+	if (fiberDiameter==2) {axonDiameter=1.6 nodeDiameter=1.4 masDiameter=1.4 psDiameter=1.6 internodalLength=200.1 psLength=10 numberOfLamella=30}
+	if (fiberDiameter==5.7) {axonDiameter=3.4 nodeDiameter=1.9 masDiameter=1.9 psDiameter=3.4 internodalLength=500 psLength=35 numberOfLamella=80}
+	if (fiberDiameter==7.3) {axonDiameter=4.6 nodeDiameter=2.4 masDiameter=2.4 psDiameter=4.6 internodalLength=750 psLength=38 numberOfLamella=100}
+	if (fiberDiameter==8.7) {axonDiameter=5.8 nodeDiameter=2.8 masDiameter=2.8 psDiameter=5.8 internodalLength=1000 psLength=40 numberOfLamella=110}
+	if (fiberDiameter==10.0) {axonDiameter=6.9 nodeDiameter=3.3 masDiameter=3.3 psDiameter=6.9 internodalLength=1150 psLength=46 numberOfLamella=120}
+	if (fiberDiameter==11.5) {axonDiameter=8.1 nodeDiameter=3.7 masDiameter=3.7 psDiameter=8.1 internodalLength=1250 psLength=50 numberOfLamella=130}
+	if (fiberDiameter==12.8) {axonDiameter=9.2 nodeDiameter=4.2 masDiameter=4.2 psDiameter=9.2 internodalLength=1350 psLength=54 numberOfLamella=135}
+	if (fiberDiameter==14.0) {axonDiameter=10.4 nodeDiameter=4.7 masDiameter=4.7 psDiameter=10.4 internodalLength=1400 psLength=56 numberOfLamella=140}
+	if (fiberDiameter==15.0) {axonDiameter=11.5 nodeDiameter=5.0 masDiameter=5.0 psDiameter=11.5 internodalLength=1450 psLength=58 numberOfLamella=145}
+	if (fiberDiameter==16.0) {axonDiameter=12.7 nodeDiameter=5.5 masDiameter=5.5 psDiameter=12.7 internodalLength=1500 psLength=60 numberOfLamella=150}
+
+	Rpn0=(rhoa*10000*.01)/(PI*((((nodeDiameter/2)+space_n)^2)-((nodeDiameter/2)^2)))
+	Rpn1=(rhoa*10000*.01)/(PI*((((masDiameter/2)+space_p1)^2)-((masDiameter/2)^2)))
+	Rpn2=(rhoa*10000*.01)/(PI*((((psDiameter/2)+space_p2)^2)-((psDiameter/2)^2)))
+	Rpx=(rhoa*10000*.01)/(PI*((((axonDiameter/2)+space_i)^2)-((axonDiameter/2)^2)))
+	
+	isLength=(internodalLength-nodeLength-(2*masLength)-(2*psLength))/6
+
+	//Scale all segment lengths for the spatial_factor
+	isLength = isLength / spatial_factor
+	psLength = psLength / spatial_factor
+	masLength = masLength / spatial_factor
+	nodeLength = nodeLength / spatial_factor
+
+	}
+
+modelInputDefaults()
+globalParameters()
+dependent_var()

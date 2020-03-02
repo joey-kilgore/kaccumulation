@@ -1,0 +1,17 @@
+/*===================================================================
+CALCULATE THE EXTRACELLULAR RESISTANCES AT CENTER OF EACH 
+COMPARTMENT
+=====================================================================*/
+	
+objref distVec, xtrares, volts
+volts=new Vector(totalSections,0)
+
+proc computeResistance() {
+
+		for i=0,totalSections {
+
+			  distVec.x[i]=sqrt( (xpos.x[i]-xElec)^2 + (ypos.x[i]-yElec)^2 + (zpos.x[i]-zElec)^2 )
+			  xtrares.x[i]= (k*0.01) / (distVec.x[i])  // MOhm
+
+			}
+	}

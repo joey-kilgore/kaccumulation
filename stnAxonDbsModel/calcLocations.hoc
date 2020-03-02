@@ -1,0 +1,29 @@
+/*===================================================
+SUBROUTINES TO CALCULATE THE POSITION FOR THE .(0) EDGE OF EACH SECTION
+=====================================================*/
+
+objref xpos, ypos, zpos
+objref xyzPos
+xpos=new Vector( (totalSections+1) ,0)
+ypos=new Vector( (totalSections+1) ,0)
+zpos=new Vector( (totalSections+1) ,0)
+
+proc xyPos() {
+	StartPos= -internodalLength * nodeSections/spatial_factor / 2  // .(0) edge of 1st IS
+	
+	for i=0, totalSections {
+
+		if (i == 0) {
+			xpos.x[i] = StartPos
+		}else{
+			xpos.x[i] = xpos.x[i-1] + secMat.x[i-1][2]
+			}
+
+		}
+	}
+
+proc setPosMatrix() {
+	xyzPos.setcol(0,xpos)
+	xyzPos.setcol(1,ypos)
+	xyzPos.setcol(2,zpos)
+	}

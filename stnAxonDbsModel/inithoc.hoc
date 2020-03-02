@@ -1,0 +1,36 @@
+//Model
+
+load_file("nrngui.hoc")
+load_file("globalParameters.hoc")  //define model globals and default inputs
+load_file("createSegmentMatrix.hoc")  //creates a matrix describing connectivity of segments
+load_file("createaxon.hoc")  //subroutine to create axon
+load_file("calcLocations.hoc")  //subroutine to calculate node locations
+load_file("calcResistance.hoc")  //subroutine to calculate resistances
+load_file("buildAll.hoc")  //do all the above
+load_file("extracellularStim.hoc")  //extracellular stimulus parameters
+load_file("alteradvance.hoc")  //overwrite advance proc for extracellular stim
+load_file("standard.ses")
+
+tstop = 1500
+// run()
+xpanel("Bellinger et al. 2008")
+xlabel("Press a below button to run the simulation:")
+xbutton("Short demo run","short_run()")
+xbutton("fig 2b (2 hour run)","fig2b()")
+xpanel()
+
+proc short_run() {
+  tstop=3
+  init()
+  run()
+  Graph[0].exec_menu("View = plot")
+  print "Short run finished"
+}
+
+proc fig2b() {
+  tstop=1500 //default tstop
+  init()
+  run()
+  Graph[0].exec_menu("View = plot")
+  print "Completed fig 2b"
+}

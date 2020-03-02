@@ -1,0 +1,30 @@
+/*===========================================
+BUILD THE AXON ACCORDING TO SPECIFIED INPUTS
+=============================================*/
+
+proc buildAxon() {
+	fiberDiameter=$1
+	xElec=$2
+	yElec=$3  
+	zElec=$4
+	rho=$5			
+	k=(rho)/(4*PI)
+
+	xyzPos=new Matrix(totalSections+1, 3)
+	xyzPos.zero()
+	xyPos()
+	setPosMatrix()
+
+	forall disconnect()
+	createaxon()
+	
+	forall nseg = spatial_factor_sections
+
+	distVec = new Vector(totalSections+1,0)
+	xtrares = new Vector(totalSections+1,0)
+	computeResistance()
+} 
+
+buildAxon(deffiberDiameter,defxElec,defyElec,defzElec,defrho)
+
+access node[ (nodeSections-1)/2 ]
