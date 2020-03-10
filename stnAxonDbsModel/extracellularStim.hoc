@@ -2,33 +2,33 @@ objref xtraClamp, tstim, tpstim
 xtraClamp=new trainIClamp()
 create electrode
 
-	DELAY=0
-	PW=0.1
-	DURATION=100
-	FREQ=130
-	AMPLITUDE=-10000 //nA
+DELAY=0
+PW=0.1
+DURATION=100
+FREQ=10000
+AMPLITUDE=-10000 //nA
 
 proc stimulus() {
 	electrode {
-	  xtraClamp.loc(0.5)
-	  xtraClamp.del=$1
-          xtraClamp.PW=$2
-          xtraClamp.train=$3
-          xtraClamp.freq=$4
-          xtraClamp.amp=$5
-          }
+	  	xtraClamp.loc(0.5)
+	  	xtraClamp.del=$1
+        xtraClamp.PW=$2
+        xtraClamp.train=$3
+        xtraClamp.freq=$4
+        xtraClamp.amp=$5
+    }
 
 	//Record stimulation times
 	tstim=new Vector(DURATION/(10^3/FREQ))
 	for(ej=0; ej<tstim.size(); ej=ej+1){
 		tstim.x[ej]=ej*1/FREQ*10^3
-		}
+	}
 	
 	//Record stimulation times + psuedo stimulation times
 	tpstim=new Vector(tstop/(10^3/FREQ))
 	for(ej=0; ej<tpstim.size(); ej=ej+1){
 		tpstim.x[ej]=ej*1/FREQ*10^3
-		}
 	}
+}
 
 stimulus(DELAY,PW,DURATION,FREQ,AMPLITUDE)

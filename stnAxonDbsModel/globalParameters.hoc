@@ -14,7 +14,7 @@ proc globalParameters() {
 	
 //resolution
 	temporal_factor = 1    			//1: dt = 0.0125, 2: dt = 0.00625
-	spatial_factor = 1				//Multiplier for the number of sections used in the model. 1: 231 sections total
+	spatial_factor = 3				//Multiplier for the number of sections used in the model. 1: 231 sections total, 3: 693 sections total
 	spatial_factor_sections = 23	//should be an odd number so that v.(0.5) is always computed. nseg for segments is modified in buildall()
 
 //topological
