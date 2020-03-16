@@ -6,8 +6,8 @@ DELAY=0
 PW=0.1
 DURATION=100
 FREQ=10000
-AMPLITUDE=-10000 //nA
-
+//AMPLITUDE=-10000 //nA
+AMPLITUDE = 0
 proc stimulus() {
 	electrode {
 	  	xtraClamp.loc(0.5)
