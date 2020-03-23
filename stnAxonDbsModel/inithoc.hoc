@@ -11,6 +11,9 @@ load_file("extracellularStim.hoc")  //extracellular stimulus parameters
 load_file("alteradvance.hoc")  //overwrite advance proc for extracellular stim
 load_file("standard.ses")
 
+load_file("apcountController.hoc")  // AP Count controller for thresh finder
+load_file("threshFinder.hoc")       // calculates block threshold amplitude
+
 tstop = 1500
 // run()
 xpanel("Bellinger et al. 2008")

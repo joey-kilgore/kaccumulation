@@ -2,7 +2,7 @@ objref xtraClamp, tstim, tpstim
 xtraClamp=new dcStim()
 create electrode
 
-DELAY=0
+DELAY=10
 PW=0.1
 DURATION=100
 FREQ=10000
