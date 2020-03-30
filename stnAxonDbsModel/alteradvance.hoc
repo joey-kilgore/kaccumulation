@@ -9,4 +9,5 @@ proc advance() {
 		}
 	//print xtraClamp.i
 	fadvance()
+	saveValuesToFile()
 }

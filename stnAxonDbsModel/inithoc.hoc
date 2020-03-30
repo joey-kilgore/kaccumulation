@@ -1,15 +1,17 @@
 //Model
 
 load_file("nrngui.hoc")
-load_file("globalParameters.hoc")  //define model globals and default inputs
+load_file("globalParameters.hoc")     //define model globals and default inputs
 load_file("createSegmentMatrix.hoc")  //creates a matrix describing connectivity of segments
-load_file("createaxon.hoc")  //subroutine to create axon
-load_file("calcLocations.hoc")  //subroutine to calculate node locations
-load_file("calcResistance.hoc")  //subroutine to calculate resistances
-load_file("buildAll.hoc")  //do all the above
-load_file("extracellularStim.hoc")  //extracellular stimulus parameters
-load_file("alteradvance.hoc")  //overwrite advance proc for extracellular stim
+load_file("createaxon.hoc")           //subroutine to create axon
+load_file("calcLocations.hoc")        //subroutine to calculate node locations
+load_file("calcResistance.hoc")       //subroutine to calculate resistances
+load_file("buildAll.hoc")             //do all the above
+load_file("extracellularStim.hoc")    //extracellular stimulus parameters
+load_file("alteradvance.hoc")         //overwrite advance proc for extracellular stim
 load_file("standard.ses")
+load_file("save_to_file_UI.hoc")  // ui for saving data
+load_file("save_to_file.hoc")     // functions for writing data to file
 
 tstop = 1500
 // run()
