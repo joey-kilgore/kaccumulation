@@ -13,6 +13,9 @@ load_file("standard.ses")
 load_file("save_to_file_UI.hoc")  // ui for saving data
 load_file("save_to_file.hoc")     // functions for writing data to file
 
+load_file("apcountController.hoc")  // AP Count controller for thresh finder
+load_file("threshFinder.hoc")       // calculates block threshold amplitude
+
 tstop = 1500
 // run()
 xpanel("Bellinger et al. 2008")

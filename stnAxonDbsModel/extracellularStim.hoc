@@ -2,7 +2,8 @@ objref xtraClamp, tstim, tpstim
 xtraClamp=new trainIClamp()
 create electrode
 
-DELAY=5
+
+DELAY=10
 PW=0.1
 DURATION=20
 FREQ=10000
