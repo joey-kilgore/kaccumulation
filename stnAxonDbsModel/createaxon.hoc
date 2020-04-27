@@ -2,6 +2,10 @@ create node[nodeSections], MAS[masSections], PS[psSections], IS[iSections]
 
 proc createaxon() {
 	for i=0,nodeSections-1 {
+		tempNak = defINaKmax
+		if(i>=((nodeSections-1)/2-5) && i<=((nodeSections-1)/2+5) && turnOffPump==1) {
+			tempNak = 0
+		}
 		node[i]{					
 			nseg=1
 			diam=nodeDiameter
@@ -10,7 +14,7 @@ proc createaxon() {
 			cm=2
 			insert axnodenew2
 			insert NaKpump
-			INaKmax_NaKpump = defINaKmax
+			INaKmax_NaKpump = tempNak
 			Kmnai_NaKpump = defKmnai
 			Kmko_NaKpump = defKmko
 			insert kdifrl
@@ -22,6 +26,10 @@ proc createaxon() {
 		}
 
 	for i=0, masSections-1 {
+		tempNak = defINaKmax
+		if(i>=((masSections)/2-9) && i<=((masSections)/2+10) && turnOffPump==1) {
+			tempNak = 0
+		}
 		MAS[i]{
 			nseg=1
 			diam=fiberDiameter
@@ -35,7 +43,7 @@ proc createaxon() {
 			rseg_kdifl=masDiameter/2
 			sp_kdifl=space_p1
 			insert NaKpump
-			INaKmax_NaKpump = defINaKmax
+			INaKmax_NaKpump = tempNak
 			Kmnai_NaKpump = defKmnai
 			Kmko_NaKpump = defKmko
 			insert extracellular xraxial=Rpn1 xg=mygm/(numberOfLamella*2) xc=mycm/(numberOfLamella*2)
@@ -43,6 +51,10 @@ proc createaxon() {
 		}
 
 	for i=0, psSections-1 {
+		tempNak = defINaKmax
+		if(i>=((psSections)/2-9) && i<=((psSections)/2+10) && turnOffPump==1) {
+			tempNak = 0
+		}
 		PS[i]{
 			nseg=1
 			diam=fiberDiameter
@@ -56,7 +68,7 @@ proc createaxon() {
 			rseg_kdifl=psDiameter/2
 			sp_kdifl=space_p2
 			insert NaKpump
-			INaKmax_NaKpump = defINaKmax
+			INaKmax_NaKpump = tempNak
 			Kmnai_NaKpump = defKmnai
 			Kmko_NaKpump = defKmko
 			insert extracellular xraxial=Rpn2 xg=mygm/(numberOfLamella*2) xc=mycm/(numberOfLamella*2)
@@ -64,6 +76,10 @@ proc createaxon() {
 	}
 
 	for i=0, iSections-1 {
+		tempNak = defINaKmax
+		if(i>=((iSections)/2-33) && i<=((iSections)/2+26) && turnOffPump==1) {
+			tempNak = 0
+		}
 		IS[i]{
 			nseg=1
 			diam=fiberDiameter
@@ -77,7 +93,7 @@ proc createaxon() {
 			rseg_kdifl=axonDiameter/2
 			sp_kdifl=space_i
 			insert NaKpump
-			INaKmax_NaKpump = defINaKmax
+			INaKmax_NaKpump = tempNak
 			Kmnai_NaKpump = defKmnai
 			Kmko_NaKpump = defKmko
 			insert extracellular xraxial=Rpx xg=mygm/(numberOfLamella*2) xc=mycm/(numberOfLamella*2)
