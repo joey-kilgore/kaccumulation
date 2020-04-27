@@ -3,12 +3,13 @@ objref xtraClamp, tstim, tpstim
 xtraClamp = new trainIClamp()
 create electrode
 
+
 DELAY=10
 PW=0.1
-DURATION=100
+DURATION=20
 FREQ=10000
-//AMPLITUDE=-10000 //nA
-AMPLITUDE = 0
+AMPLITUDE=-30000 //nA
+//AMPLITUDE = 0
 proc stimulus() {
 	electrode {
 	  	xtraClamp.loc(0.5)

@@ -1,6 +1,7 @@
 proc modelInputDefaults() {
 	deffiberDiameter = 2	//fiber diameter
 	defxElec = 0		//electrode position (um)
+
 	defyElec = 100
 	defzElec = 0
 	defrho = 500			//resistivity (ohm cm)
