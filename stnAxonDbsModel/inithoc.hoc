@@ -15,6 +15,7 @@ load_file("save_to_file.hoc")     // functions for writing data to file
 
 load_file("apcountController.hoc")  // AP Count controller for thresh finder
 load_file("threshFinder.hoc")       // calculates block threshold amplitude
+load_file("expirements.hoc")
 
 tstop = 1500
 // run()

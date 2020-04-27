@@ -45,7 +45,8 @@ proc globalParameters() {
 	defgkfbar = 0.03
 
 	defINaKmax = 0.00246
-	
+	turnOffPump = 0
+
 	defKmnai = 27.9
 	defKmko = 5.3
 	}

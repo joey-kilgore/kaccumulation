@@ -1,0 +1,162 @@
+//objref testFiringFreq
+//node[50] { testFiringFreq = new pulseTrain(0.5)}
+
+proc findFiringFreq(){ 
+    // given a frequency of a pulse train, how many action potentials 
+    //  will propogate
+    // Theoretically, at lower frequencies there should the same number of
+    //  action potentials, but as the stimulation frequency increases there
+    //  will be 'dropped' APs
+    xtraClamp = new pulseTrain()
+    electrode{
+        xtraClamp.loc(0.5)
+        xtraClamp.del = 10
+        xtraClamp.amp = -40000
+        xtraClamp.PW = .1
+        xtraClamp.freq = $1
+        xtraClamp.train = 999.99   // just under 1000 so there isn't an extra pulse
+    }
+    APC_reset()
+    APC_setThresh(-30)
+
+    tstop = 1050        // 10ms of rest and then a 1 sec simulation and 40ms post stimulation
+    numTestPulses = $1  // because the simulation is 1sec, the frequency in Hz
+                        //  is equal to the number of APs
+
+    //xtraClamp.amp = 0   // make sure there is no extracellular stimulation
+    run()               // run the simulation
+
+    print "test pulses, propagated APs"
+    print numTestPulses, ",", APC_getCount(1)
+}
+
+proc findFiringFreqAutomated(){local i
+    // simply run the findFiringFreq() simulation with a range of frequencies
+    findFiringFreq(1)
+    findFiringFreq(10)
+    for(i=150; i<=950; i+=100){
+        findFiringFreq(i)
+    }
+}
+
+proc findCarryOver(){ localobj apTimesVec,apc, testPulses
+    // findCarryOver(stimAmp, stimDur, [[pulseFreq], stimFreq])
+    // find the max carryover effect from extracellular stimulation
+    // $1   - stim amplitude
+    // $2   - stim duration
+    // $3   - test pulse freq
+    // $4   - stim freq
+
+    setStim(0,0,0)  // always be sure to turn off threshFinder stim
+
+    // setup AP recording
+    apTimesVec = new Vector()
+    node[100] { apc = new APCount(.5)}
+    apc.record(apTimesVec)
+    
+    // setup test pulse train  
+    node[0] {testPulses = new pulseTrain(0.5)}
+    testPulses.train = $2 * 2
+    testPulses.del = 10
+    testPulses.amp = 1
+    testPulses.PW = .1
+    if(numarg()>2){
+        testPulses.freq = $3
+    } else {
+        testPulses.freq = 40
+    }
+
+    // setup extracellular electrode
+    electrode{
+        xtraClamp.loc(0.5)
+        xtraClamp.del = 50
+        xtraClamp.amp = $1
+        xtraClamp.train = $2
+        if(numarg()==4){
+            xtraClamp.freq = $4
+        }
+    }
+
+    // prep the environment
+    tstop = $2 * 2
+    blockEnd = 50 + $2
+    foundCarryOver = 0
+    carryOverTime = 0
+
+    // keep increasing run time until it is sufficiently long enough
+    //  for the carryover effect to diminish
+    while(foundCarryOver == 0){
+        run()
+        for i=0, apTimesVec.size()-1 {
+            if(apTimesVec.x[i] > blockEnd){
+                carryOverTime = apTimesVec.x[i] - blockEnd
+                foundCarryOver = 1
+                break
+            }
+        }
+        if(foundCarryOver == 0){
+            tstop = tstop + $2
+            testPulses.train = testPulses.train + $2
+        }
+    }
+    
+    print "carryover (ms),",carryOverTime
+}
+
+proc findCarryOverAutomated(){
+    // runs through a series of carryover trials
+    print "Note carryover times are shown as the difference between when an"
+    print "AP is measured at node 100 and when the block was turned off"
+    print "For a more accurate measure you will need to also account for the"
+    print "propagation delay of this AP as well as the fact there is a 25ms delay"
+    print "between test pulses"
+    print "testAmp,testDur"
+    for(testDur=500; testDur<=2500; testDur+=500){
+        for(testAmp=30000; testAmp<=60000; testAmp+=15000){
+            print testAmp, ",", testDur
+            findCarryOver(testAmp, testDur)
+        }
+    }
+}
+
+proc findActivationThresh(){localobj apTimesVec, apc
+    // given current electrode, what is the minimum amplitude required to cause an action potential
+    // this will be done in a binary search and trials consist of 10ms rest, and 10ms of stim
+    minAmp = $1
+    maxAmp = $2
+    resolution = $3
+    if(numarg()>3){
+        freq = $4
+    }
+
+    apTimesVec = new Vector()
+    node[100] { apc = new APCount(.5)}
+    apc.record(apTimesVec)
+
+    setStim(0,0,0)
+    tstop = 20
+
+    while(maxAmp-minAmp > resolution){
+        curAmp = (maxAmp+minAmp)/2
+        electrode{
+            xtraClamp.loc(0.5)
+            xtraClamp.del = 10
+            xtraClamp.amp = curAmp
+            xtraClamp.train = 10
+            if(numarg()>3){
+                xtraClamp.freq = freq
+            }
+        }
+        run()
+        print curAmp, ",", apc.n
+        if(apc.n > 0){
+            // there was atleast 1 AP, decrease amplitude
+            maxAmp = curAmp
+        }else{
+            // no AP, increase amplitude
+            minAmp = curAmp
+        }
+    }
+
+    print "activation,", maxAmp
+}
