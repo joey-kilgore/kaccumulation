@@ -13,6 +13,7 @@ proc saveValuesToFile(){
     if(valueToSaveSelected[9] == 1) appendMYSAToFile()
     if(valueToSaveSelected[10] == 1) appendFLUTToFile()
     if(valueToSaveSelected[11] == 1) appendPSKToFile()
+    if(valueToSaveSelected[12] == 1) appendINKToFile()
 }
 
 // append the voltages of all nodes to file
@@ -173,4 +174,15 @@ proc appendPSKToFile(){
     }
     // put a new line at the end of the list
     filePSK.printf("\n")
+}
+proc appendINKToFile(){
+    // print the time
+    fileINK.printf("%f,", t)
+
+    for i=0, psSections-1 {
+        // Print the STIN voltage to file using a comma seperator
+        fileINK.printf("%f,", PS[i].ink_NaKpump(0.5))
+    }
+    // put a new line at the end of the list
+    fileINK.printf("\n")
 }

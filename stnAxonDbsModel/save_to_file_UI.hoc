@@ -1,7 +1,7 @@
 // Select options for saving data to files with a GUI 
 
 // create the array to hold whether the checkboxes are selected
-double valueToSaveSelected[12] // initialized to 0 (False)
+double valueToSaveSelected[13] // initialized to 0 (False)
 strdef filePathMGate
 strdef filePathHGate
 strdef filePathVoltage
@@ -14,6 +14,7 @@ strdef filePathINaP
 strdef filePathMYSA
 strdef filePathFLUT
 strdef filePathPSK
+strdef filePathINK
 
 // Creating the file objects for each selection
 objref fileMGate    // Checkbox 0
@@ -28,6 +29,7 @@ objref fileINaP     // Checkbox 8
 objref fileMYSA     // Checkbox 9
 objref fileFLUT     // Checkbox 10
 objref filePSK     // Checkbox 11
+objref fileINK      // Checkbox 12
 
 // Creating the VBox for all the components
 objref saveValueToFileVBox
@@ -57,6 +59,7 @@ proc DrawSaveFileVBox(){
     xcheckbox("MYSA", &valueToSaveSelected[9], "inputFilePath(9)")   // checkbox to save MYSA
     xcheckbox("FLUT", &valueToSaveSelected[10], "inputFilePath(10)")   // checkbox to save FLUT
     xcheckbox("PSk", &valueToSaveSelected[11], "inputFilePath(11)")   // checkbox to save STIN
+    xcheckbox("INK", &valueToSaveSelected[12], "inputFilePath(12)") // checkbox to save INK value
 
     xbutton("Commit Selection", "commitFileSelect()")   // commit selection actually creates the file objects  
     xbutton("Close Files", "closeFiles()")  // allows the user to close the file at any point to open it and view
@@ -82,9 +85,10 @@ proc enterFileDirectory(){
     sprint(filePathMYSA, "%s%s", direc, "MYSA.csv")
     sprint(filePathFLUT, "%s%s", direc, "FLUT.csv")
     sprint(filePathPSK, "%s%s", direc, "PSk.csv")
+    sprint(filePathINK, "%s%s", direc, "INK.csv")
 
     // check all check boxes
-    for i=0, 11 {
+    for i=0, 12 {
         valueToSaveSelected[i] = 1
     }
 
@@ -107,6 +111,7 @@ proc inputFilePath(){
     if(selectedValue == 9) string_dialog("Enter path for MYSA file: ", filePathMYSA)
     if(selectedValue == 10) string_dialog("Enter path for FLUT file: ", filePathFLUT)
     if(selectedValue == 11) string_dialog("Enter path for PSk file: ", filePathPSK)
+    if(selectedValue == 12) string_dialog("Enter path for INK file: ", filePathINK)
 }
 
 
@@ -207,6 +212,14 @@ proc commitFileSelect(){
         // Open the file (set to append)
         filePSK.aopen()
     }
+
+    // the INK was selected
+    if(valueToSaveSelected[12] == 1){
+        // Create the fileINK file object
+        fileINK = new File(filePathINK)
+        // Open the file (set to append)
+        fileINK.aopen()
+    }
 }
 
 proc closeFiles(){ 
@@ -268,6 +281,11 @@ proc closeFiles(){
     if(valueToSaveSelected[11] == 1) {
         filePSK.close()   // the PSk was selected   
         valueToSaveSelected[11] = 0
+    }
+
+    if(valueToSaveSelected[12] == 1) {
+        fileINK.close()     // close the selected INK file
+        valueToSaveSelected[12] = 0
     }
 }
 
