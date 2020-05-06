@@ -33,7 +33,7 @@ xpanel(0,0)
 save_window_ = new Graph(0)
 save_window_.size(-48.75,1513.75,-86.7083,45.2083)
 scene_vector_[2] = save_window_
-{save_window_.view(-48.75, -86.7083, 1562.5, 131.917, 0, 0, 658.56, 200)}
+{save_window_.view(-48.75, -86.7083, 1562.5, 131.917, 800, 0, 650, 200)}
 graphList[0].append(save_window_)
 save_window_.save_name("graphList[0].")
 save_window_.addexpr("node[20].v(0.5)", 1, 1, 0.8, 0.9, 2)
@@ -42,7 +42,7 @@ save_window_.addexpr("node[20].v(0.5)", 1, 1, 0.8, 0.9, 2)
 save_window_ = new Graph(0)
 save_window_.size(-48.75,1513.75,-86.7083,45.2083)
 scene_vector_[2] = save_window_
-{save_window_.view(-48.75, -86.7083, 1562.5, 131.917, 0, 0, 658.56, 200)}
+{save_window_.view(-48.75, -86.7083, 1562.5, 131.917, 800, 350, 650, 200)}
 graphList[0].append(save_window_)
 save_window_.save_name("graphList[0].")
 save_window_.addexpr("node[50].v(0.5)", 1, 1, 0.8, 0.9, 2)
@@ -51,7 +51,7 @@ save_window_.addexpr("node[50].v(0.5)", 1, 1, 0.8, 0.9, 2)
 save_window_ = new Graph(0)
 save_window_.size(-48.75,1513.75,-86.7083,45.2083)
 scene_vector_[2] = save_window_
-{save_window_.view(-48.75, -86.7083, 1562.5, 131.917, 0, 0, 658.56, 200)}
+{save_window_.view(-48.75, -86.7083, 1562.5, 131.917, 800, 700, 650, 200)}
 graphList[0].append(save_window_)
 save_window_.save_name("graphList[0].")
 save_window_.addexpr("node[80].v(0.5)", 1, 1, 0.8, 0.9, 2)
