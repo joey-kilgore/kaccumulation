@@ -2,7 +2,7 @@ proc modelInputDefaults() {
 	deffiberDiameter = 2	//fiber diameter
 	defxElec = 0		//electrode position (um)
 
-	defyElec = 100
+	defyElec = 1000
 	defzElec = 0
 	defrho = 500			//resistivity (ohm cm)
 	} 
@@ -45,7 +45,8 @@ proc globalParameters() {
 	defgkfbar = 0.03
 
 	defINaKmax = 0.00246
-	turnOffPump = 0
+	pumpMultiplier = 1	// set this to change max conductance for 
+						// all central compartments
 
 	defKmnai = 27.9
 	defKmko = 5.3

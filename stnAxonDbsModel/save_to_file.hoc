@@ -14,6 +14,8 @@ proc saveValuesToFile(){
     if(valueToSaveSelected[10] == 1) appendFLUTToFile()
     if(valueToSaveSelected[11] == 1) appendPSKToFile()
     if(valueToSaveSelected[12] == 1) appendINKToFile()
+    if(valueToSaveSelected[13] == 1) appendKOToFile()
+    if(valueToSaveSelected[14] == 1) appendKIToFile()
 }
 
 // append the voltages of all nodes to file
@@ -185,4 +187,34 @@ proc appendINKToFile(){
     }
     // put a new line at the end of the list
     fileINK.printf("\n")
+}
+
+proc appendKOToFile(){local temp
+    // print the time
+    fileKO.printf("%f,", t)
+
+    temp = 0
+    for i=0, totalSections-2 {
+        if(secMat.x[i][0] == 1){temp = IS[secMat.x[i][1]].ko(0.5)}
+        if(secMat.x[i][0] == 2){temp = PS[secMat.x[i][1]].ko(0.5)}
+        if(secMat.x[i][0] == 3){temp = MAS[secMat.x[i][1]].ko(0.5)}
+        if(secMat.x[i][0] == 4){temp = node[secMat.x[i][1]].ko(0.5)}
+        fileKO.printf("%f,", temp)
+    }
+    fileKO.printf("\n")
+}
+
+proc appendKIToFile(){local temp
+    // print the time
+    fileKI.printf("%f,", t)
+
+    temp = 0
+    for i=0, totalSections-2 {
+        if(secMat.x[i][0] == 1){temp = IS[secMat.x[i][1]].ki(0.5)}
+        if(secMat.x[i][0] == 2){temp = PS[secMat.x[i][1]].ki(0.5)}
+        if(secMat.x[i][0] == 3){temp = MAS[secMat.x[i][1]].ki(0.5)}
+        if(secMat.x[i][0] == 4){temp = node[secMat.x[i][1]].ki(0.5)}
+        fileKI.printf("%f,", temp)
+    }
+    fileKI.printf("\n")
 }

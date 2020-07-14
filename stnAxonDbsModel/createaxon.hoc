@@ -3,8 +3,8 @@ create node[nodeSections], MAS[masSections], PS[psSections], IS[iSections]
 proc createaxon() {
 	for i=0,nodeSections-1 {
 		tempNak = defINaKmax
-		if(i>=((nodeSections-1)/2-5) && i<=((nodeSections-1)/2+5) && turnOffPump==1) {
-			tempNak = 0
+		if(i>=((nodeSections-1)/2-5) && i<=((nodeSections-1)/2+5)) {
+			tempNak = tempNak * pumpMultiplier
 		}
 		node[i]{					
 			nseg=1
@@ -27,8 +27,8 @@ proc createaxon() {
 
 	for i=0, masSections-1 {
 		tempNak = defINaKmax
-		if(i>=((masSections)/2-9) && i<=((masSections)/2+10) && turnOffPump==1) {
-			tempNak = 0
+		if(i>=((masSections)/2-9) && i<=((masSections)/2+10)) {
+			tempNak = tempNak * pumpMultiplier
 		}
 		MAS[i]{
 			nseg=1
@@ -52,8 +52,8 @@ proc createaxon() {
 
 	for i=0, psSections-1 {
 		tempNak = defINaKmax
-		if(i>=((psSections)/2-9) && i<=((psSections)/2+10) && turnOffPump==1) {
-			tempNak = 0
+		if(i>=((psSections)/2-9) && i<=((psSections)/2+10)) {
+			tempNak = tempNak * pumpMultiplier
 		}
 		PS[i]{
 			nseg=1
@@ -77,8 +77,8 @@ proc createaxon() {
 
 	for i=0, iSections-1 {
 		tempNak = defINaKmax
-		if(i>=((iSections)/2-33) && i<=((iSections)/2+26) && turnOffPump==1) {
-			tempNak = 0
+		if(i>=((iSections)/2-33) && i<=((iSections)/2+26)) {
+			tempNak = tempNak * pumpMultiplier
 		}
 		IS[i]{
 			nseg=1
