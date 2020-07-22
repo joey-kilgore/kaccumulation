@@ -27,7 +27,7 @@ proc createaxon() {
 
 	for i=0, masSections-1 {
 		tempNak = defINaKmax
-		if(i>=((masSections)/2-9) && i<=((masSections)/2+10)) {
+		if(i>=((masSections)/2-10) && i<=((masSections)/2+9)) {
 			tempNak = tempNak * pumpMultiplier
 		}
 		MAS[i]{
@@ -52,7 +52,7 @@ proc createaxon() {
 
 	for i=0, psSections-1 {
 		tempNak = defINaKmax
-		if(i>=((psSections)/2-9) && i<=((psSections)/2+10)) {
+		if(i>=((psSections)/2-10) && i<=((psSections)/2+9)) {
 			tempNak = tempNak * pumpMultiplier
 		}
 		PS[i]{
@@ -77,7 +77,7 @@ proc createaxon() {
 
 	for i=0, iSections-1 {
 		tempNak = defINaKmax
-		if(i>=((iSections)/2-33) && i<=((iSections)/2+26)) {
+		if(i>=((iSections)/2-30) && i<=((iSections)/2+29)) {
 			tempNak = tempNak * pumpMultiplier
 		}
 		IS[i]{
