@@ -112,9 +112,11 @@ proc findCarryOverAutomated(){
     print "between test pulses"
     print "testAmp,testDur"
     for(testDur=500; testDur<=2500; testDur+=500){
-        for(testAmp=30000; testAmp<=60000; testAmp+=15000){
+        for(testAmp=-335000; testAmp>=-670000; testAmp-=167500){
+        //for(testAmp=550000; testAmp<=1100000; testAmp+=275000){
+        //for(testAmp=3800000; testAmp<=7420000; testAmp+=1830000){
             print testAmp, ",", testDur
-            findCarryOver(testAmp, testDur)
+            findCarryOver(testAmp, testDur,40)
         }
     }
 }
@@ -159,4 +161,35 @@ proc findActivationThresh(){localobj apTimesVec, apc
     }
 
     print "activation,", maxAmp
+}
+
+proc reversePolarity(){ localobj testPulses, apTimesVec, apc
+    // $1 - DC Amplitude
+    // $2 - DC Duration
+
+    setStim(0,0,0)
+
+    // test pulses every 25 ms
+    node[0] {testPulses = new pulseTrain(0.5)}
+    testPulses.train = 10000
+    testPulses.del = 10
+    testPulses.amp = 1
+    testPulses.PW = .1
+    testPulses.freq = 40
+
+    // setup extracellular electrode
+    electrode{
+        xtraClamp.loc(0.5)
+        xtraClamp.del = 50
+        xtraClamp.amp = $1
+        xtraClamp.train = $2
+    }
+
+    // setup AP recording
+    apTimesVec = new Vector()
+    node[100] { apc = new APCount(.5)}
+    apc.record(apTimesVec)
+
+    tstop = $2*2
+
 }

@@ -1,12 +1,12 @@
 objref xtraClamp, tstim, tpstim
-//xtraClamp=new dcStim()
-xtraClamp = new trainIClamp()
+xtraClamp=new dcStim()			// define the DC stim
+//xtraClamp = new trainIClamp() // define the KHFAC stim
 create electrode
 
 
 DELAY=10
 PW=0.1
-DURATION=20
+DURATION=300
 FREQ=10000
 AMPLITUDE=-30000 //nA
 //AMPLITUDE = 0
@@ -42,5 +42,5 @@ proc stimulusDC(){
     }
 }
 
-stimulus(DELAY,PW,DURATION,FREQ,AMPLITUDE)
-//stimulusDC(10,500,-20000)
+//stimulus(DELAY,PW,DURATION,FREQ,AMPLITUDE)	// KHFAC initial values
+stimulusDC(10,500,-20000)						// DC	 initial values
