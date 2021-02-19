@@ -193,3 +193,55 @@ proc reversePolarity(){ localobj testPulses, apTimesVec, apc
     tstop = $2*2
 
 }
+
+proc findMinSubBlock(){
+    // Find the minimum amplitude that maintains block after a set period of
+    //  stimulation at an amplitude at or above block threshold
+
+    prePulseAmp = $1    // the pre pulse is the at or above BT stimulation
+    prePulseDur = $2
+
+    // we will use a binary search, and we know the min value to maintain
+    //  block must be between the prePulseAmp and 0
+    minAmp = 0
+    maxAmp = prePulseAmp
+
+    // block tests will be done with a test pulse at t=prePulseDur+110ms
+    //  10ms for initial rest in the simulation
+    //  then 100ms of the sub block amplitude
+    setStim(10,prePulseDur+110,0.1)
+
+
+    while(abs(maxAmp - minAmp) > 1000){ // binary search, resolution of 1uA
+        curAmp = (maxAmp + minAmp)/2
+
+        // first we will run the block at the prePulse parameters
+        electrode{
+            xtraClamp.loc(0.5)
+            xtraClamp.del = 10
+            xtraClamp.amp = prePulseAmp
+            xtraClamp.train = prePulseDur
+        }
+        tstop = prePulseDur+10
+        run()
+
+        // now we will test if block is maintained at the new amplitude
+        electrode{
+            xtraClamp.loc(0.5)
+            xtraClamp.del = prePulseDur+10
+            xtraClamp.amp = curAmp
+            xtraClamp.train = 150
+        }
+        APC_reset()
+        continuerun(prePulseDur+160)    // run another 150ms, after 100ms the test pulse will fire
+
+        print curAmp, ",", APC_getCount(1) 
+        if(APC_getCount(1)==0){
+            // if there were no APs measured, then the test pulse was blocked
+            // in which case we need to lower the subBlock amp
+            maxAmp = curAmp
+        }else{
+            minAmp = curAmp
+        }
+    }
+}
