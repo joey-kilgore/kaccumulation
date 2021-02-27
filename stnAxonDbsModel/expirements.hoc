@@ -200,19 +200,21 @@ proc findMinSubBlock(){
 
     prePulseAmp = $1    // the pre pulse is the at or above BT stimulation
     prePulseDur = $2
+    testPulseDel = $3   // test pulse delay relative to the beginning
+                        //  of sub block stimulation
 
     // we will use a binary search, and we know the min value to maintain
     //  block must be between the prePulseAmp and 0
     minAmp = 0
     maxAmp = prePulseAmp
 
-    // block tests will be done with a test pulse at t=prePulseDur+110ms
+    // block tests will be done with a test pulse at t=prePulseDur+10ms+testPulseDel
     //  10ms for initial rest in the simulation
-    //  then 100ms of the sub block amplitude
-    setStim(10,prePulseDur+110,0.1)
+    //  then testPulseDel ms of the sub block amplitude
+    setStim(10,prePulseDur+10+testPulseDel,0.1)
 
 
-    while(abs(maxAmp - minAmp) > 1000){ // binary search, resolution of 1uA
+    while(abs(maxAmp - minAmp) > 10000){ // binary search, resolution of 10uA
         curAmp = (maxAmp + minAmp)/2
 
         // first we will run the block at the prePulse parameters
@@ -230,10 +232,10 @@ proc findMinSubBlock(){
             xtraClamp.loc(0.5)
             xtraClamp.del = prePulseDur+10
             xtraClamp.amp = curAmp
-            xtraClamp.train = 150
+            xtraClamp.train = testPulseDel+50
         }
         APC_reset()
-        continuerun(prePulseDur+160)    // run another 150ms, after 100ms the test pulse will fire
+        continuerun(prePulseDur+60+testPulseDel)    // run till the testPulse + 50ms
 
         print curAmp, ",", APC_getCount(1) 
         if(APC_getCount(1)==0){
