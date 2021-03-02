@@ -247,3 +247,71 @@ proc findMinSubBlock(){
         }
     }
 }
+
+proc findSubBlockDur(){ localobj apTimesVec,apc, testPulses
+    // Find the minimum amplitude that maintains block after a set period of
+    //  stimulation at an amplitude at or above block threshold
+
+    prePulseAmp = $1    // the pre pulse is the at or above BT stimulation
+    prePulseDur = $2
+    subBlockAmp = $3   // test pulse delay relative to the beginning
+                        //  of sub block stimulation
+
+    setStim(0,0,0)  // always be sure to turn off threshFinder stim
+
+    // setup AP recording
+    apTimesVec = new Vector()
+    node[100] { apc = new APCount(.5)}
+    apc.record(apTimesVec)
+
+    // setup test pulse train  
+    node[0] {testPulses = new pulseTrain(0.5)}
+    testPulses.del = 10
+    testPulses.amp = 1
+    testPulses.PW = .1
+    testPulses.freq = 40
+
+    // prep the environment
+    tstop = prePulseDur*3
+    subBlockDur = prePulseDur*3
+    foundCarryOver = 0
+    carryOverTime = 0
+
+    // keep increasing run time until it is sufficiently long enough
+    //  for the carryover effect to diminish
+    while(foundCarryOver == 0){
+        testPulses.train = 50+prePulseDur+subBlockDur
+
+        // first we will run the block at the prePulse parameters
+        electrode{
+            xtraClamp.loc(0.5)
+            xtraClamp.del = 50
+            xtraClamp.amp = prePulseAmp
+            xtraClamp.train = prePulseDur
+        }
+        tstop = prePulseDur+50
+        run()
+        
+        // now we will test if block is maintained at the new amplitude
+        electrode{
+            xtraClamp.loc(0.5)
+            xtraClamp.del = prePulseDur+50
+            xtraClamp.amp = subBlockAmp
+            xtraClamp.train = subBlockDur
+        }
+        APC_reset()
+        continuerun(50+prePulseDur+subBlockDur) 
+
+        for i=0, apTimesVec.size()-1 {
+            if(apTimesVec.x[i] > (50+prePulseDur)){
+                carryOverTime = apTimesVec.x[i] - (50+prePulseDur)
+                foundCarryOver = 1
+                break
+            }
+        }
+        if(foundCarryOver == 0){
+            subBlockDur = subBlockDur + prePulseDur
+        }
+    }
+    print "carryover (ms),",carryOverTime
+}
