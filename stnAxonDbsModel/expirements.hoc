@@ -315,3 +315,14 @@ proc findSubBlockDur(){ localobj apTimesVec,apc, testPulses
     }
     print "carryover (ms),",carryOverTime
 }
+
+proc findSubBlockDurAutomated(){
+    blockAmpAuto = -670000
+    print "blockAmp,blockDur,subBlockAmp"
+    for(blockDurAuto=50;blockDurAuto<=400;blockDurAuto+=50){
+        for(subBlockAmpAuto=-80000; subBlockAmpAuto>=-120000; subBlockAmpAuto-=10000){
+            print blockAmpAuto, ",", blockDurAuto, ",", subBlockAmpAuto
+            findSubBlockDur(blockAmpAuto,blockDurAuto,subBlockAmpAuto)
+        }
+    }
+}
