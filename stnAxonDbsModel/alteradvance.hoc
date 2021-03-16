@@ -1,12 +1,14 @@
 proc advance() {
-		
-	for i=0, totalSections-1 {
-		if (secMat.x[i][0] == 1) { IS[ secMat.x[i][1] ].e_extracellular(0:1) = (xtraClamp.i)*xtrares.x[i]:(xtraClamp.i)*xtrares.x[i+1] }
-		if (secMat.x[i][0] == 2) { PS[ secMat.x[i][1] ].e_extracellular(0:1) = (xtraClamp.i)*xtrares.x[i]:(xtraClamp.i)*xtrares.x[i+1] }
-		if (secMat.x[i][0] == 3) { MAS[ secMat.x[i][1] ].e_extracellular(0:1) = (xtraClamp.i)*xtrares.x[i]:(xtraClamp.i)*xtrares.x[i+1] }
-		if (secMat.x[i][0] == 4) { node[ secMat.x[i][1] ].e_extracellular(0:1) = (xtraClamp.i)*xtrares.x[i]:(xtraClamp.i)*xtrares.x[i+1] }
-
+	if(customElectrodes == 0){
+		for i=0, totalSections-1 {
+			if (secMat.x[i][0] == 1) { IS[ secMat.x[i][1] ].e_extracellular(0:1) = (xtraClamp.i)*xtrares.x[i]:(xtraClamp.i)*xtrares.x[i+1] }
+			if (secMat.x[i][0] == 2) { PS[ secMat.x[i][1] ].e_extracellular(0:1) = (xtraClamp.i)*xtrares.x[i]:(xtraClamp.i)*xtrares.x[i+1] }
+			if (secMat.x[i][0] == 3) { MAS[ secMat.x[i][1] ].e_extracellular(0:1) = (xtraClamp.i)*xtrares.x[i]:(xtraClamp.i)*xtrares.x[i+1] }
+			if (secMat.x[i][0] == 4) { node[ secMat.x[i][1] ].e_extracellular(0:1) = (xtraClamp.i)*xtrares.x[i]:(xtraClamp.i)*xtrares.x[i+1] }
 		}
+	}else{
+		setExtracellular()
+	}
 	//print xtraClamp.i
 	fadvance()
 	saveValuesToFile()
