@@ -139,28 +139,10 @@ proc saveElectrodeConfig(){local tempElectrodeIndex, tempIndex, tempModelNum loc
 
         // Each model will have all of its respective parameters saved
         tempModelNum = electrodes[tempElectrodeIndex].getModelNum()
-        if(tempModelNum == 0){  // sine electrode
+        if(tempModelNum == 0){  // dc electrode
             configFile.printf("electrodes[%d].electrodeModel.amp=%f\n", tempIndex, tempElectrode.electrodeModel.amp)
-            configFile.printf("electrodes[%d].electrodeModel.f=%f\n", tempIndex, tempElectrode.electrodeModel.f)
-            configFile.printf("electrodes[%d].electrodeModel.offset=%f\n", tempIndex, tempElectrode.electrodeModel.offset)
-            configFile.printf("electrodes[%d].electrodeModel.del=%f\n", tempIndex, tempElectrode.electrodeModel.del)
-            configFile.printf("electrodes[%d].electrodeModel.dur=%f\n", tempIndex, tempElectrode.electrodeModel.dur)
-        }else if(tempModelNum == 1){    // tri electrode
-            configFile.printf("electrodes[%d].electrodeModel.amp=%f\n", tempIndex, tempElectrode.electrodeModel.amp)
-            configFile.printf("electrodes[%d].electrodeModel.freq=%f\n", tempIndex, tempElectrode.electrodeModel.freq)
-            configFile.printf("electrodes[%d].electrodeModel.offset=%f\n", tempIndex, tempElectrode.electrodeModel.offset)
-            configFile.printf("electrodes[%d].electrodeModel.del=%f\n", tempIndex, tempElectrode.electrodeModel.del)
-            configFile.printf("electrodes[%d].electrodeModel.dur=%f\n", tempIndex, tempElectrode.electrodeModel.dur)
-        }else if(tempModelNum == 2 || tempModelNum == 5){    // square electrode  
             configFile.printf("electrodes[%d].electrodeModel.del=%f\n", tempIndex, tempElectrode.electrodeModel.del)
             configFile.printf("electrodes[%d].electrodeModel.train=%f\n", tempIndex, tempElectrode.electrodeModel.train)
-            configFile.printf("electrodes[%d].electrodeModel.cathod_dur=%f\n", tempIndex, tempElectrode.electrodeModel.cathod_dur)
-            configFile.printf("electrodes[%d].electrodeModel.postcathod_dur=%f\n", tempIndex, tempElectrode.electrodeModel.postcathod_dur)
-            configFile.printf("electrodes[%d].electrodeModel.anod_dur=%f\n", tempIndex, tempElectrode.electrodeModel.anod_dur)
-            configFile.printf("electrodes[%d].electrodeModel.postanod_dur=%f\n", tempIndex, tempElectrode.electrodeModel.postanod_dur)
-            configFile.printf("electrodes[%d].electrodeModel.high_amp=%f\n", tempIndex, tempElectrode.electrodeModel.high_amp)
-            configFile.printf("electrodes[%d].electrodeModel.low_amp=%f\n", tempIndex, tempElectrode.electrodeModel.low_amp)
-            configFile.printf("electrodes[%d].electrodeModel.freq=%f\n", tempIndex, tempElectrode.electrodeModel.freq)
         }
         tempElectrodeIndex = availableElectrodes[tempElectrodeIndex]
         tempIndex = tempIndex + 1 // Move to the next electrode position

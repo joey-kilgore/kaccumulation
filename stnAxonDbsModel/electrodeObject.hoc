@@ -103,45 +103,23 @@ begintemplate Electrode
             amplitude = $1 * polarity
         }
         
-        if (modelNum==0){   // sine electrode
+        if (modelNum==0){   // dc electrode
             electrodeModel.amp = amplitude
-        }else if(modelNum==1){  // tri electrode
-            electrodeModel.amp = amplitude
-        }else if(modelNum==2){  // square electrode
-            electrodeModel.high_amp = amplitude
-            electrodeModel.low_amp  = -1 * amplitude
-        }else if(modelNum==5){  // DC electrode
-            electrodeModel.high_amp = amplitude
         }
     }
 
     proc setFreq(){
         // sets the frequency of the elctrode which depends on the electrode type
         // the frequency in Hz is the only parameter
-        if (modelNum==0){   // sine Electrode
-            electrodeModel.f = $1
-        }else if(modelNum==1){  // tri electrode
-            electrodeModel.freq = $1
-        }else if(modelNum==2){  // square electrode
-            electrodeModel.cathod_dur = 1/($1/1000*2)   // half period in ms
-            electrodeModel.postcathod_dur = 0
-            electrodeModel.anod_dur = 1/($1/1000*2)
-            electrodeModel.postanod_dur = 0
-        }else if(modelNum==5){  // DC electrode
-            print "ERROR: CAN NOT SET FREQUENCY OF DC ELECTRODE"
+        if (modelNum==0){   // dc Electrode
+            //print "ERROR: CAN NOT SET FREQUENCY OF DC ELECTRODE"
         }
     }
 
     proc setDur(){
         // sets the duration of the elctrode which depends on the electrode type
         // the duration in ms is the only parameter
-        if (modelNum==0){   // sine Electrode
-            electrodeModel.dur = $1
-        }else if(modelNum==1){  // tri electrode
-            electrodeModel.dur = $1
-        }else if(modelNum==2){  // square electrode
-            electrodeModel.train = $1
-        }else if(modelNum==5){  // DC electrode
+        if (modelNum==0){   // dc Electrode
             electrodeModel.train = $1
         }
     }
@@ -149,13 +127,7 @@ begintemplate Electrode
     proc setDel(){
         // sets the delay of the elctrode which depends on the electrode type
         // the delay in ms is the only parameter
-        if (modelNum==0){   // sine Electrode
-            electrodeModel.del = $1
-        }else if(modelNum==1){  // tri electrode
-            electrodeModel.del = $1
-        }else if(modelNum==2){  // square electrode
-            electrodeModel.del = $1
-        }else if(modelNum==5){  // DC electrode
+        if (modelNum==0){   // dc Electrode
             electrodeModel.del = $1
         }
     }
@@ -169,57 +141,31 @@ begintemplate Electrode
     
     func getAmp(){
         // getter for amp value (nA)
-        if (modelNum==0){   // sine electrode
+        if (modelNum==0){   // dc electrode
             return electrodeModel.amp
-        }else if(modelNum==1){  // tri electrode
-            return electrodeModel.amp
-        }else if(modelNum==2){  // square electrode
-            return electrodeModel.high_amp
-        }else if(modelNum==5){  // DC electrode
-            return electrodeModel.high_amp
         }
         return -1   // if unknown modelNum
     }
 
     func getFreq(){
         // getter for freq value (Hz)
-        if (modelNum==0){   // sine Electrode
-            return electrodeModel.f
-        }else if(modelNum==1){  // tri electrode
-            return electrodeModel.freq
-        }else if(modelNum==2){  // square electrode
-            // the frequency must be calculated for square electrodes
-            return 1/(electrodeModel.cathod_dur*2/1000)
-        }else if(modelNum==5){  // DC electrode
-            // print "ERROR: CAN NOT GET FREQUENCY OF DC ELECTRODE"
-            return 0
+        if (modelNum==0){   // dc Electrode
+            //print "ERROR: CAN NOT GET FREQUENCY OF DC ELECTRODE"
         }
         return -1   // if unknown modelNum
     }
 
     func getDur(){
         // getter for duration value (ms)
-        if (modelNum==0){   // sine Electrode
+        if (modelNum==0){   // dc Electrode
             return electrodeModel.dur
-        }else if(modelNum==1){  // tri electrode
-            return electrodeModel.dur
-        }else if(modelNum==2){  // square electrode
-            return electrodeModel.train
-        }else if(modelNum==5){  // DC electrode
-            return electrodeModel.train
         }
         return -1   // if unknown modelNum
     }
 
     func getDel(){
         // getter for delay value (ms)
-        if (modelNum==0){   // sine Electrode
-            return electrodeModel.del
-        }else if(modelNum==1){  // tri electrode
-            return electrodeModel.del
-        }else if(modelNum==2){  // square electrode
-            return electrodeModel.del
-        }else if(modelNum==5){  // DC electrode
+        if (modelNum==0){   // dc Electrode
             return electrodeModel.del
         }
         return -1   // if unknown modelNum
