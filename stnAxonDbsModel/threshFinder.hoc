@@ -22,7 +22,12 @@ proc setAmps(){
     //  electrode (other two possible electrodes are dependent on this value) and 
     //  param 2 is the coefficient relating the anodic charge to the cathodic charge, only necessary for
     //  unbalanced waves.
-    xtraClamp.amp = $1
+
+    if(customElectrodes==0){
+        xtraClamp.amp = $1
+    }else{
+        setAmplitudeElectrodes($1)
+    }
 }
 
 
