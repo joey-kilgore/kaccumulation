@@ -326,3 +326,66 @@ proc findSubBlockDurAutomated(){
         }
     }
 }
+
+proc findCarryOverCustom(){localobj apTimesVec,apc, testPulses
+    // similar to the findCarryOver procedure, but for custom electrodes
+    // this method assumes you have setup the electrodes prior to calling this method
+    
+    // findCarryOver(stimDur, pulseFreq, stimAmp)
+    // find the max carryover effect from extracellular stimulation
+    // $1   - stim duration
+    // $2   - test pulse freq   (optional)
+    // $3   - stim amplitude    (optional)
+
+    setStim(0,0,0)  // always be sure to turn off threshFinder stim
+
+    // setup AP recording
+    apTimesVec = new Vector()
+    node[100] { apc = new APCount(.5)}
+    apc.record(apTimesVec)
+    
+    // setup test pulse train  
+    node[0] {testPulses = new pulseTrain(0.5)}
+    testPulses.train = $1 * 2
+    testPulses.del = 10
+    testPulses.amp = 1
+    testPulses.PW = .1
+    if(numarg()>1){
+        testPulses.freq = $2
+    } else {
+        testPulses.freq = 40
+    }
+
+    // setup extracellular electrode
+    setDelayElectrodes(50)
+    setDurationElectrodes($1)
+    if(numarg()>2){
+        // we only set the amplitude if a third arg was passed
+        setAmplitudeElectrodes($3)
+    }
+
+    // prep the environment
+    tstop = $1 * 2
+    blockEnd = 50 + $1
+    foundCarryOver = 0
+    carryOverTime = 0
+
+    // keep increasing run time until it is sufficiently long enough
+    //  for the carryover effect to diminish
+    while(foundCarryOver == 0){
+        run()
+        for i=0, apTimesVec.size()-1 {
+            if(apTimesVec.x[i] > blockEnd){
+                carryOverTime = apTimesVec.x[i] - blockEnd
+                foundCarryOver = 1
+                break
+            }
+        }
+        if(foundCarryOver == 0){
+            tstop = tstop + $1
+            testPulses.train = testPulses.train + $1
+        }
+    }
+    
+    print "carryover (ms),",carryOverTime
+}

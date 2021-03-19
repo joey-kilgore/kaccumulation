@@ -88,6 +88,26 @@ proc setAmplitudeElectrodes(){
     }
 }
 
+proc setDurationElectrodes(){
+    // Sets the duration of all electrodes currently in the simulation
+    // the duration is in ms and is the only param of the method
+    tempElectrode = firstElectrodeIndex
+    while (tempElectrode != -1) {       // while there are still more electrodes
+        electrodes[tempElectrode].setDur($1)
+        tempElectrode = availableElectrodes[tempElectrode]  // move to the next electrode
+    }
+}
+
+proc setDelayElectrodes(){
+    // Sets the delay of all electrodes currently in the simulation
+    // the delay is in ms and is the only param of the method
+    tempElectrode = firstElectrodeIndex
+    while (tempElectrode != -1) {       // while there are still more electrodes
+        electrodes[tempElectrode].setDel($1)
+        tempElectrode = availableElectrodes[tempElectrode]  // move to the next electrode
+    }
+}
+
 proc outputElectrodeSetup(){local tempElectrode
     tempElectrode = firstElectrodeIndex
     while (tempElectrode != -1) {       // while there are still more electrodes
