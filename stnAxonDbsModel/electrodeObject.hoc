@@ -1,0 +1,205 @@
+// This object is used in conjunction with the electrode controller
+// allowing for the user to create any type of electrode easily
+
+begintemplate Electrode
+    public calcVoltage              // these are two different ways of calculating extracellular voltage
+    public calcVoltageCompartment   // the compartment version is made to be more efficient
+
+    public setAmp       // setters for various electrode params    
+    public setFreq  
+    public setDur
+    public setDel
+    public setPos
+    public movPos
+    public oppPolarity
+
+    public getAmp       // getters for various electrode params
+    public getFreq
+    public getDur
+    public getDel
+    public getXPos
+    public getYPos
+    public getModelNum
+
+    public printData    // output data
+    public printDataAdvanced
+
+    public electrodeModel   // the model is public knowledge
+    public modelNum
+
+    external totalSections  // external variables needed
+    external k      // these are used during the distance calculation     
+    external xpos   // (see setPos())
+    external ypos
+
+    create electrodeSection // all point processes need to be within a section
+    objref electrodeModel
+    objref  ext // store the distance calculation for the electrdoes
+    index = -1
+    xElec = -1
+    yElec = -1
+    public polarity
+    public amplitude
+    
+    proc init(){
+        // electrodes are created with 4 parameters
+        index = $1      // the index of the electrode
+        modelNum = $2   // model type 0=Sine, 1=Triangle, 2=Square, 3=Sine Ramp, 4=DCSine, 5=DC
+        xElec = $3
+        yElec = $4
+        polarity = 1
+
+        if (modelNum==0){
+            electrodeSection{
+                electrodeModel = new dcStim(.5)
+                electrodeModel.loc(0.5)
+                electrodeModel.del=10
+                electrodeModel.train=1000
+                electrodeModel.amp=-670000
+            }
+            amplitude = -670000
+        }
+        setPos()
+    }
+
+    func calcVoltage(){ 
+        // calculate the voltage at a particular point from the electrode
+        x = $1
+        y = $2
+        return electrodeModel.i * (k*0.01) / sqrt( (xpos.x[i]-xElec)^2 + (ypos.x[i]-yElec)^2 )
+    }
+    
+    func calcVoltageCompartment(){
+        // calculates the voltage for a particular compartment (using the indexing in x)
+        //  this is faster than using the calcVoltage
+        //  the index is passed as a parameter
+        return electrodeModel.i * ext.x[$1] 
+    }
+
+    proc setPos(){ local i
+        // do the calculation for all distances to the compartments ahead of time
+        // optionally can be used to set the new position of the electrodes by passing x and y as arguments
+        if(numarg() == 2){
+            xElec = $1
+            yElec = $2
+        }
+        ext = new Vector(totalSections+1,0)
+        for i=0, totalSections{
+            ext.x[i] = (k*0.01) / sqrt( (xpos.x[i]-xElec)^2 + (ypos.x[i]-yElec)^2 )
+        }
+    }
+
+    proc movPos(){
+        // change to pos by the amounts passed (change in x, change in y)
+        xElec = xElec + $1
+        yElec = yElec + $2
+        setPos()
+    }
+
+    proc setAmp(){
+        // sets the amplitude of the electrode depending on the electrode type
+        // the amplitude in nA is passed as the only parameter
+        if(numarg() == 1){
+            amplitude = $1 * polarity
+        }
+        
+        if (modelNum==0){   // dc electrode
+            electrodeModel.amp = amplitude
+        }
+    }
+
+    proc setFreq(){
+        // sets the frequency of the elctrode which depends on the electrode type
+        // the frequency in Hz is the only parameter
+        if (modelNum==0){   // dc Electrode
+            //print "ERROR: CAN NOT SET FREQUENCY OF DC ELECTRODE"
+        }
+    }
+
+    proc setDur(){
+        // sets the duration of the elctrode which depends on the electrode type
+        // the duration in ms is the only parameter
+        if (modelNum==0){   // dc Electrode
+            electrodeModel.train = $1
+        }
+    }
+
+    proc setDel(){
+        // sets the delay of the elctrode which depends on the electrode type
+        // the delay in ms is the only parameter
+        if (modelNum==0){   // dc Electrode
+            electrodeModel.del = $1
+        }
+    }
+
+    proc oppPolarity(){
+        // flips the polarity of the electrode (neg becomes pos, pos becomes neg)
+        polarity = polarity*-1
+        amplitude = amplitude * -1
+        setAmp()    // sets the amplitude to the new value based on the new polarity
+    }
+    
+    func getAmp(){
+        // getter for amp value (nA)
+        if (modelNum==0){   // dc electrode
+            return electrodeModel.amp
+        }
+        return -1   // if unknown modelNum
+    }
+
+    func getFreq(){
+        // getter for freq value (Hz)
+        if (modelNum==0){   // dc Electrode
+            //print "ERROR: CAN NOT GET FREQUENCY OF DC ELECTRODE"
+        }
+        return -1   // if unknown modelNum
+    }
+
+    func getDur(){
+        // getter for duration value (ms)
+        if (modelNum==0){   // dc Electrode
+            return electrodeModel.dur
+        }
+        return -1   // if unknown modelNum
+    }
+
+    func getDel(){
+        // getter for delay value (ms)
+        if (modelNum==0){   // dc Electrode
+            return electrodeModel.del
+        }
+        return -1   // if unknown modelNum
+    }
+
+    func getXPos(){
+        // getter for x position
+        return xElec
+    }
+
+    func getYPos(){
+        // getter for y position
+        return yElec
+    }
+
+    func getModelNum(){
+        // getter for modelNum
+        return modelNum
+    }
+
+    proc printData(){
+        print "Index, ", index
+        print "Electrode Model, ", electrodeModel
+        print "xpos, ypos, ", xElec, ",", yElec
+    }    
+    
+    proc printDataAdvanced(){
+        print "Index, ", index
+        print "Electrode Model, ", electrodeModel
+        print "xpos, ypos, ", getXPos(), ",", getYPos()
+        print "Amplitude, ", getAmp()
+        print "Frequency, ", getFreq()
+        print "Duration, ", getDur()
+        print "Delay, ", getDel()
+
+    }
+endtemplate Electrode

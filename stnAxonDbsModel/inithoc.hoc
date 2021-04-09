@@ -8,6 +8,8 @@ load_file("calcLocations.hoc")        //subroutine to calculate node locations
 load_file("calcResistance.hoc")       //subroutine to calculate resistances
 load_file("buildAll.hoc")             //do all the above
 load_file("extracellularStim.hoc")    //extracellular stimulus parameters
+load_file("electrodeObject.hoc")
+load_file("electrodeController.hoc")
 load_file("alteradvance.hoc")         //overwrite advance proc for extracellular stim
 load_file("standard.ses")
 load_file("save_to_file_UI.hoc")  // ui for saving data
