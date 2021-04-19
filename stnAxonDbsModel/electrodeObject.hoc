@@ -158,7 +158,7 @@ begintemplate Electrode
     func getDur(){
         // getter for duration value (ms)
         if (modelNum==0){   // dc Electrode
-            return electrodeModel.dur
+            return electrodeModel.train
         }
         return -1   // if unknown modelNum
     }
